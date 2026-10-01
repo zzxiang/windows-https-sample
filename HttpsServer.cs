@@ -49,7 +49,7 @@ public static class HttpsServer
         if (path.Equals("/api/responsive", StringComparison.OrdinalIgnoreCase))
         {
             Console.WriteLine($"[{DateTimeOffset.UtcNow:O}] Responsive API received a request.");
-            var message = $"Hello from the HTTPS server. Time: {DateTimeOffset.UtcNow:O}";
+            var message = $"Hello from the HTTPS server.";
             await WriteResponseAsync(sslStream, 200, message);
             return;
         }
