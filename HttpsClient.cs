@@ -48,8 +48,7 @@ public static class HttpsClient
 
     private static async Task InvokeResponsiveAsync(HttpClient client)
     {
-        var requestStartedAt = DateTimeOffset.UtcNow;
-        Console.WriteLine($"[{requestStartedAt:O}] Request sent to /api/responsive.");
+        Program.Log("Request sent to /api/responsive.");
 
         try
         {
@@ -57,31 +56,30 @@ public static class HttpsClient
             response.EnsureSuccessStatusCode();
 
             var responseBody = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"[{DateTimeOffset.UtcNow:O}] Response received from /api/responsive: {responseBody}");
+            Program.Log($"Response received from /api/responsive: {responseBody}");
         }
         catch (Exception exception)
         {
-            Console.WriteLine($"[{DateTimeOffset.UtcNow:O}] Error calling /api/responsive: {exception.Message}");
+            Program.Log($"Error calling /api/responsive: {exception.Message}");
         }
     }
 
     private static async Task InvokeTimeoutAsync(HttpClient client)
     {
-        var requestStartedAt = DateTimeOffset.UtcNow;
-        Console.WriteLine($"[{requestStartedAt:O}] Request sent to /api/timeout.");
+        Program.Log("Request sent to /api/timeout.");
 
         try
         {
             using var response = await client.GetAsync("/api/timeout");
-            Console.WriteLine($"[{DateTimeOffset.UtcNow:O}] Unexpected response received from /api/timeout. Status: {response.StatusCode}");
+            Program.Log($"Unexpected response received from /api/timeout. Status: {response.StatusCode}");
         }
         catch (TaskCanceledException)
         {
-            Console.WriteLine($"[{DateTimeOffset.UtcNow:O}] Timeout error: the request exceeded {Program.RequestTimeoutSeconds} seconds.");
+            Program.Log($"Timeout error: the request exceeded {Program.RequestTimeoutSeconds} seconds.");
         }
         catch (Exception exception)
         {
-            Console.WriteLine($"[{DateTimeOffset.UtcNow:O}] Error calling /api/timeout: {exception.Message}");
+            Program.Log($"Error calling /api/timeout: {exception.Message}");
         }
     }
 }

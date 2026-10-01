@@ -16,7 +16,7 @@ public static class HttpsServer
         listener.Server.DualMode = true;
         listener.Start();
 
-        Console.WriteLine($"[{DateTimeOffset.UtcNow:O}] HTTPS server is listening on {Program.BaseUrl}");
+        Program.Log($"HTTPS server is listening on {Program.BaseUrl}");
 
         while (true)
         {
@@ -30,7 +30,7 @@ public static class HttpsServer
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine($"[{DateTimeOffset.UtcNow:O}] HTTPS request failed: {exception.Message}");
+                    Program.Log($"HTTPS request failed: {exception.Message}");
                 }
             });
         }
@@ -52,7 +52,7 @@ public static class HttpsServer
 
         if (path.Equals("/api/responsive", StringComparison.OrdinalIgnoreCase))
         {
-            Console.WriteLine($"[{DateTimeOffset.UtcNow:O}] Responsive API received a request.");
+            Program.Log("Responsive API received a request.");
             var message = $"Hello from the HTTPS server.";
             await WriteResponseAsync(sslStream, 200, message);
             return;
@@ -60,7 +60,7 @@ public static class HttpsServer
 
         if (path.Equals("/api/timeout", StringComparison.OrdinalIgnoreCase))
         {
-            Console.WriteLine($"[{DateTimeOffset.UtcNow:O}] Timeout API received a request and is delaying without a response.");
+            Program.Log("Timeout API received a request and is delaying without a response.");
             await Task.Delay(TimeSpan.FromMinutes(2));
             return;
         }
