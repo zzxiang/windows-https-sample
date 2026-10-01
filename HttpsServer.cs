@@ -39,10 +39,14 @@ public static class HttpsServer
     private static async Task HandleClientAsync(TcpClient client, X509Certificate2 certificate)
     {
         using var sslStream = new SslStream(client.GetStream(), leaveInnerStreamOpen: false);
-        await sslStream.AuthenticateAsServerAsync(certificate, clientCertificateRequired: false, enabledSslProtocols: SslProtocols.Tls12 | SslProtocols.Tls13, checkCertificateRevocation: false);
+        await sslStream.AuthenticateAsServerAsync(
+            certificate,
+            clientCertificateRequired: false,
+            enabledSslProtocols: SslProtocols.Tls12 | SslProtocols.Tls13,
+            checkCertificateRevocation: false);
 
         var requestText = await ReadRequestAsync(sslStream);
-        var requestLine = requestText.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)[0];
+        var requestLine = requestText.Split(["\r\n"], StringSplitOptions.RemoveEmptyEntries)[0];
         var segments = requestLine.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         var path = segments.Length > 1 ? segments[1] : "/";
 
@@ -68,7 +72,8 @@ public static class HttpsServer
     {
         var requestBuilder = new StringBuilder();
         var buffer = new char[1];
-        using var reader = new StreamReader(sslStream, Encoding.ASCII, detectEncodingFromByteOrderMarks: false, leaveOpen: true);
+        using var reader = new StreamReader(
+            sslStream, Encoding.ASCII, detectEncodingFromByteOrderMarks: false, leaveOpen: true);
 
         while (true)
         {
@@ -88,7 +93,8 @@ public static class HttpsServer
         return requestBuilder.ToString();
     }
 
-    private static async Task WriteResponseAsync(SslStream sslStream, int statusCode, string message)
+    private static async Task WriteResponseAsync(
+        SslStream sslStream, int statusCode, string message)
     {
         var responseBody = Encoding.UTF8.GetBytes(message);
         var response = $"HTTP/1.1 {statusCode} {(statusCode == 200 ? "OK" : "Not Found")}\r\n" +
