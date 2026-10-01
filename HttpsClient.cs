@@ -6,11 +6,12 @@ public static class HttpsClient
     {
         using var client = new HttpClient(new HttpClientHandler
         {
-            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            ServerCertificateCustomValidationCallback =
+                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
         })
         {
             BaseAddress = new Uri(Program.BaseUrl),
-            Timeout = TimeSpan.FromSeconds(Program.RequestTimeoutSeconds)
+            Timeout = TimeSpan.FromSeconds(Program.TimeoutSeconds)
         };
 
         while (true)
@@ -75,7 +76,7 @@ public static class HttpsClient
         }
         catch (TaskCanceledException)
         {
-            Program.Log($"Timeout error: the request exceeded {Program.RequestTimeoutSeconds} seconds.");
+            Program.Log($"Timeout error: the request exceeded {Program.TimeoutSeconds} seconds.");
         }
         catch (Exception exception)
         {
