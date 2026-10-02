@@ -3,7 +3,7 @@
 public static class Program
 {
     public const string BaseUrl = "https://localhost:5001";
-    public const int TimeoutSeconds = 10;
+    public const int TimeoutSeconds = 5;
 
     public static void Log(string message)
     {
