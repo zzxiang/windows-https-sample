@@ -49,7 +49,7 @@ public static class WindowsFirewallController
 
             var result = await RunNetshAsync(
                 "advfirewall", "firewall", "add", "rule",
-                $"name={RuleName}", "dir=out", "action=block", "program=any", "remoteip=any", "profile=any", "enable=yes");
+                $"name={RuleName}", "dir=out", "action=block", "remoteip=any", "profile=any", "enable=yes");
 
             return result.ExitCode == 0
                 ? "The Windows Firewall outbound block rule was added. Outbound network traffic is now blocked machine-wide."
