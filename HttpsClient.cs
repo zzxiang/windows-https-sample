@@ -20,7 +20,9 @@ public static class HttpsClient
             Console.WriteLine("Choose an HTTPS API:");
             Console.WriteLine("1. Responsive API");
             Console.WriteLine("2. Timeout API");
-            Console.WriteLine("3. Quit");
+            Console.WriteLine("3. Block all outgoing traffic on this machine");
+            Console.WriteLine("4. Resume outgoing traffic");
+            Console.WriteLine("5. Quit");
             Console.Write("Selection: ");
 
             var input = Console.ReadLine();
@@ -38,13 +40,46 @@ public static class HttpsClient
                     await InvokeTimeoutAsync(client);
                     break;
                 case "3":
+                    await BlockOutgoingTrafficAsync();
+                    break;
+                case "4":
+                    await ResumeOutgoingTrafficAsync();
+                    break;
+                case "5":
                     Console.WriteLine("Exiting the HTTPS client.");
                     return;
                 default:
-                    Console.WriteLine("Invalid selection. Please choose 1, 2, or 3.");
+                    Console.WriteLine("Invalid selection. Please choose 1, 2, 3, 4, or 5.");
                     break;
             }
         }
+    }
+
+    private static async Task BlockOutgoingTrafficAsync()
+    {
+        var accessError = WindowsFirewallController.GetAccessError();
+        if (accessError is not null)
+        {
+            Console.WriteLine(accessError);
+            return;
+        }
+
+        Console.WriteLine("WARNING: This adds a Windows Firewall rule that blocks outbound network traffic for all applications and profiles on this machine.");
+        Console.WriteLine("The rule remains active after this client exits and can interrupt network access. Use menu option 4 to remove it.");
+        Console.Write("Type BLOCK to confirm: ");
+
+        if (!string.Equals(Console.ReadLine()?.Trim(), "BLOCK", StringComparison.Ordinal))
+        {
+            Console.WriteLine("Cancelled. No firewall changes were made.");
+            return;
+        }
+
+        Console.WriteLine(await WindowsFirewallController.BlockAllOutboundAsync());
+    }
+
+    private static async Task ResumeOutgoingTrafficAsync()
+    {
+        Console.WriteLine(await WindowsFirewallController.ResumeOutboundAsync());
     }
 
     private static async Task InvokeResponsiveAsync(HttpClient client)

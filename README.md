@@ -9,6 +9,7 @@ This project demonstrates a simple HTTPS server and client using a self-signed c
 - Responsive API: returns a text message
 - Timeout API: accepts the request but delays without responding so the client can observe a timeout
 - Interactive console client that waits for a user selection and prints timestamps for request, response, and timeout errors
+- Optional machine-wide outbound traffic block and resume actions through Windows Firewall
 
 ## Project layout
 
@@ -38,11 +39,25 @@ dotnet run -- server
 dotnet run -- client
 ```
 
+Run the client from an Administrator terminal to use the firewall actions. The other client actions do not require elevation.
+
 The client will prompt for a choice:
 
 - `1` - call the responsive API
 - `2` - call the timeout API
-- `3` - exit
+- `3` - block outbound network traffic machine-wide (requires confirmation and Administrator privileges)
+- `4` - remove the sample's outbound block rule
+- `5` - exit
+
+The block action adds a Windows Defender Firewall outbound block rule for all programs, remote addresses, and profiles. It can interrupt all network access and remains active after the client exits or the machine restarts. Select `4` to resume traffic. The resume action removes only the sample's rule and does not modify other firewall rules or default policies.
+
+If the client is unavailable, open an Administrator terminal and remove the sample's rule with:
+
+```powershell
+netsh advfirewall firewall delete rule name=WindowsHttpsSample_BlockAllOutbound_9E63D493_51B3_41CE_8E02_2B6C62EA69F4
+```
+
+These actions control Windows Defender Firewall only. They cannot guarantee that traffic is blocked if the firewall is disabled or overridden by other system or network controls.
 
 ## API endpoints
 
