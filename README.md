@@ -4,8 +4,9 @@ This project demonstrates a simple HTTPS server and client using a self-signed c
 
 ## Features
 
-- HTTPS server hosted on `https://localhost:5001`
-- Self-signed certificate generated automatically at runtime
+- HTTPS server hosted on the selected local IP address at port `5001` (for example `https://192.168.1.9:5001`)
+- Startup prompt that lists available IP addresses and allows a custom IP entry
+- Self-signed certificate generated automatically at runtime for the selected address and localhost loopback values
 - Responsive API: returns a text message
 - Timeout API: accepts the request but delays without responding so the client can observe a timeout
 - Interactive console client that waits for a user selection and prints timestamps for request, response, and timeout errors

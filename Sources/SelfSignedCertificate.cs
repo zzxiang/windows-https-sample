@@ -6,19 +6,22 @@ namespace Zhixiang.WindowsHttpsSample;
 
 public static class SelfSignedCertificate
 {
-    public static X509Certificate2 EnsureCertificate()
+    public static X509Certificate2 EnsureCertificate(IPAddress? ipAddress = null)
     {
         using var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
         store.Open(OpenFlags.ReadWrite);
 
-        var existingCertificate = store.Certificates
-            .Find(X509FindType.FindBySubjectDistinguishedName, "CN=localhost", validOnly: false)
-            .Cast<X509Certificate2>()
-            .FirstOrDefault(candidate => candidate.HasPrivateKey && candidate.Subject.Contains("localhost", StringComparison.OrdinalIgnoreCase));
-
-        if (existingCertificate is not null)
+        if (ipAddress is null || IPAddress.IsLoopback(ipAddress))
         {
-            return existingCertificate;
+            var existingCertificate = store.Certificates
+                .Find(X509FindType.FindBySubjectDistinguishedName, "CN=localhost", validOnly: false)
+                .Cast<X509Certificate2>()
+                .FirstOrDefault(candidate => candidate.HasPrivateKey && candidate.Subject.Contains("localhost", StringComparison.OrdinalIgnoreCase));
+
+            if (existingCertificate is not null)
+            {
+                return existingCertificate;
+            }
         }
 
         using var rsa = RSA.Create(2048);
@@ -33,6 +36,12 @@ public static class SelfSignedCertificate
         subjectAlternativeNames.AddDnsName("localhost");
         subjectAlternativeNames.AddIpAddress(IPAddress.Loopback);
         subjectAlternativeNames.AddIpAddress(IPAddress.IPv6Loopback);
+
+        if (ipAddress is not null && !IPAddress.IsLoopback(ipAddress))
+        {
+            subjectAlternativeNames.AddIpAddress(ipAddress);
+        }
+
         request.CertificateExtensions.Add(subjectAlternativeNames.Build());
 
         var certificate = request.CreateSelfSigned(DateTimeOffset.UtcNow.AddDays(-1), DateTimeOffset.UtcNow.AddYears(1));

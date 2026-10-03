@@ -11,9 +11,13 @@ public static class HttpsServer
 {
     public static async Task RunAsync()
     {
-        var certificate = SelfSignedCertificate.EnsureCertificate();
-        var listener = new TcpListener(IPAddress.IPv6Loopback, 5001);
-        listener.Server.DualMode = true;
+        var certificate = SelfSignedCertificate.EnsureCertificate(Program.SelectedAddress);
+        var listener = new TcpListener(Program.SelectedAddress, Program.Port);
+        if (Program.SelectedAddress.AddressFamily == AddressFamily.InterNetworkV6)
+        {
+            listener.Server.DualMode = true;
+        }
+
         listener.Start();
 
         Program.Log($"HTTPS server is listening on {Program.BaseUrl}");
