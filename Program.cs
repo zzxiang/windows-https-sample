@@ -15,7 +15,7 @@ public static class Program
 
     public static void Log(string message)
     {
-        var line = $"[{DateTimeOffset.UtcNow:O}] {message}";
+        var line = $"[{DateTimeOffset.Now:O}] {message}";
         Console.WriteLine(line);
         _networkTracing?.WriteApplicationLog(line);
     }

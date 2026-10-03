@@ -59,7 +59,7 @@ public sealed class NetworkTracing : EventListener
 
         var eventName = eventData.EventName ?? $"Event{eventData.EventId}";
         WriteLineToFile(
-            $"[{DateTimeOffset.UtcNow:O}] [NET {eventData.EventSource.Name}/{eventName}]{payload}");
+            $"[{DateTimeOffset.Now:O}] [NET {eventData.EventSource.Name}/{eventName}]{payload}");
     }
 
     public override void Dispose()
