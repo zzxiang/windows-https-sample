@@ -1,4 +1,4 @@
-# Create an HTTPS Server and Client
+# Create the HTTPS Server and Client
 
 Create a C# project implementing a HTTPS server and a HTTPS client.
 

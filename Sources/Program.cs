@@ -2,7 +2,7 @@
 
 public static class Program
 {
-    public const string BaseUrl = "https://localhost:5001";
+    public const string BaseUrl = "https://192.168.1.9:5001";
     public const int TimeoutSeconds = 5;
 
     public static void Log(string message)

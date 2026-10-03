@@ -26,9 +26,7 @@ public static class SelfSignedCertificate
 
         request.CertificateExtensions.Add(new X509BasicConstraintsExtension(false, false, 0, false));
         request.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.KeyEncipherment, true));
-        request.CertificateExtensions.Add(new X509EnhancedKeyUsageExtension(
-            new OidCollection { new Oid("1.3.6.1.5.5.7.3.1") },
-            true));
+        request.CertificateExtensions.Add(new X509EnhancedKeyUsageExtension([new Oid("1.3.6.1.5.5.7.3.1")], true));
         request.CertificateExtensions.Add(new X509SubjectKeyIdentifierExtension(request.PublicKey, false));
 
         var subjectAlternativeNames = new SubjectAlternativeNameBuilder();

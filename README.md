@@ -11,7 +11,7 @@ This project demonstrates a simple HTTPS server and client using a self-signed c
 - Interactive console client that waits for a user selection and prints timestamps for request, response, and timeout errors
 - Optional machine-wide outbound traffic block and resume actions through Windows Firewall
 
-## Project layout
+## Source Code
 
 - `Program.cs` - entry point that starts either the server or the client
 - `HttpsServer.cs` - HTTPS server using Kestrel
