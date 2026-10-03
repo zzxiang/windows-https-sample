@@ -33,13 +33,13 @@ public static class SelfSignedCertificate
         request.CertificateExtensions.Add(new X509SubjectKeyIdentifierExtension(request.PublicKey, false));
 
         var subjectAlternativeNames = new SubjectAlternativeNameBuilder();
-        subjectAlternativeNames.AddDnsName("localhost");
-        subjectAlternativeNames.AddIpAddress(IPAddress.Loopback);
-        subjectAlternativeNames.AddIpAddress(IPAddress.IPv6Loopback);
+        // subjectAlternativeNames.AddDnsName("localhost");
+        // subjectAlternativeNames.AddIpAddress(IPAddress.Loopback);
+        // subjectAlternativeNames.AddIpAddress(IPAddress.IPv6Loopback);
 
         if (ipAddress is not null && !IPAddress.IsLoopback(ipAddress))
         {
-            subjectAlternativeNames.AddIpAddress(ipAddress);
+            //subjectAlternativeNames.AddIpAddress(ipAddress);
         }
 
         request.CertificateExtensions.Add(subjectAlternativeNames.Build());

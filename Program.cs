@@ -6,6 +6,8 @@ namespace Zhixiang.WindowsHttpsSample;
 
 public static class Program
 {
+    private static NetworkTracing? _networkTracing;
+
     public const int Port = 5001;
     public const int TimeoutSeconds = 5;
     public static IPAddress SelectedAddress { get; private set; } = IPAddress.Loopback;
@@ -13,11 +15,27 @@ public static class Program
 
     public static void Log(string message)
     {
-        Console.WriteLine($"[{DateTimeOffset.UtcNow:O}] {message}");
+        var line = $"[{DateTimeOffset.UtcNow:O}] {message}";
+        Console.WriteLine(line);
+        _networkTracing?.WriteApplicationLog(line);
     }
 
     public static async Task Main(string[] args)
     {
+        if (args.Length == 0 ||
+            (!string.Equals(args[0], "server", StringComparison.OrdinalIgnoreCase) &&
+             !string.Equals(args[0], "client", StringComparison.OrdinalIgnoreCase)))
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine("  dotnet run -- server");
+            Console.WriteLine("  dotnet run -- client");
+            return;
+        }
+
+        using var networkTracing = new NetworkTracing(args[0]);
+        _networkTracing = networkTracing;
+        Console.WriteLine($"Network trace and application log: {networkTracing.LogFilePath}");
+
         SelectedAddress = SelectAvailableAddress();
         BaseUrl = $"https://{FormatHostForUrl(SelectedAddress)}:{Port}";
 
@@ -32,10 +50,6 @@ public static class Program
             await HttpsClient.RunAsync();
             return;
         }
-
-        Console.WriteLine("Usage:");
-        Console.WriteLine("  dotnet run -- server");
-        Console.WriteLine("  dotnet run -- client");
     }
 
     private static IPAddress SelectAvailableAddress()

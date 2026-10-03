@@ -10,13 +10,15 @@ This project demonstrates a simple HTTPS server and client using a self-signed c
 - Responsive API: returns a text message
 - Timeout API: accepts the request but delays without responding so the client can observe a timeout
 - Interactive console client that waits for a user selection and prints timestamps for request, response, and timeout errors
+- .NET network tracing for `System.Net.*` events, with separate `logs/server.log` and `logs/client.log` files
 - Optional machine-wide outbound traffic block and resume actions through Windows Firewall
 
 ## Source Code
 
 - `Program.cs` - entry point that starts either the server or the client
-- `HttpsServer.cs` - HTTPS server using Kestrel
+- `HttpsServer.cs` - HTTPS server using `TcpListener` and `SslStream`
 - `HttpsClient.cs` - interactive client that calls the APIs
+- `NetworkTracing.cs` - captures .NET network events and writes them with application logs
 - `SelfSignedCertificate.cs` - creates and loads a local self-signed certificate
 
 ## Requirements
@@ -27,6 +29,8 @@ This project demonstrates a simple HTTPS server and client using a self-signed c
 ## Run the sample
 
 Open two terminal windows in the project root.
+
+Network traces and application messages are appended to `logs/server.log` or `logs/client.log` in the current working directory, depending on which mode is running. Each process writes only to its own log file.
 
 ### 1. Start the HTTPS server
 
